@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const FUN_FACTS = [
   { Icon: MapPin, label: "Lagos, Nigeria" },
   { Icon: Globe, label: "Open to Remote" },
-  { Icon: GraduationCap, label: "HND Computer Science" },
+  { Icon: GraduationCap, label: "BSc Computer Science" },
   { Icon: Zap, label: "5+ Years Experience" },
 ];
 

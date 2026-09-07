@@ -5,7 +5,7 @@ export const experiences: Experience[] = [
     company: "Lorem Excellentiam (9ijakids)",
     role: "Frontend Engineer",
     period: "2023 – Present",
-    location: "Lagos, Nigeria · Hybrid",
+    location: "Lagos, Nigeria · Remote",
     description:
       "Leading frontend development for an edtech platform serving thousands of young learners across Nigeria.",
     achievements: [
@@ -22,7 +22,7 @@ export const experiences: Experience[] = [
     company: "eCONNECT (Woozeee)",
     role: "Frontend Engineer",
     period: "2022 – 2023",
-    location: "Lagos, Nigeria",
+    location: "Lagos, Nigeria · Hybrid",
     description:
       "Built new features for Woozeee, a growing social and lifestyle platform targeting young African professionals.",
     achievements: [
@@ -37,7 +37,7 @@ export const experiences: Experience[] = [
     company: "YouVerify",
     role: "Frontend Engineer",
     period: "2021 – 2022",
-    location: "Lagos, Nigeria",
+    location: "Lagos, Nigeria · Hybrid",
     description:
       "Contributed to identity verification and KYC compliance products serving thousands of African businesses.",
     achievements: [
@@ -52,7 +52,7 @@ export const experiences: Experience[] = [
     company: "Revent Technologies",
     role: "Frontend Engineer Intern",
     period: "2021",
-    location: "Lagos, Nigeria",
+    location: "Lagos, Nigeria · Onsite",
     description:
       "Started professional engineering career building high-performance Angular applications in a product-first team.",
     achievements: [
