@@ -1,5 +1,5 @@
 import React from "react";
-import Fade from "react-reveal/Fade";
+// import Fade from "react-reveal/Fade";
 import YvImg from "../assets/images/yv.png";
 import WoozeeeImg from "../assets/images/woozeee.png";
 import OntheGoImg from "../assets/images/go.png";
@@ -17,6 +17,7 @@ import TrilloImg from "../assets/images/trillo.png";
 import NatourImg from "../assets/images/natours.png";
 import OmnifoodImg from "../assets/images/omnifood.png";
 import SlackImg from "../assets/images/slack-clone.png";
+import InstitutionImg from "../assets/images/institution.png";
 
 function projects() {
   const projects = [
@@ -148,6 +149,7 @@ function projects() {
     }
   ];
 
+
   return (
     <section className="bg-primary text-white px-5 py-32" id="projects">
       <div className="container mx-auto grid md:grid-cols-2 items-center md:justify-between">
@@ -166,11 +168,11 @@ function projects() {
       </div>
 
       <div className="projects container mx-auto grid md:grid-cols-3 gap-10">
-        <Fade left>
+        {/* <Fade left> */}
           {projects.map((project, i) => {
             return (
               <div className="relative" key={i}>
-                <img src={project.img} alt={project.title} />
+                <img src={project.img.src} alt={project.title} />
                 <div className="flex absolute left-0 right-0 top-[13px] bottom-0 mx-auto w-[90%] h-[90%]  bg-primary  opacity-0 duration-500 justify-center flex-col hover:opacity-100 px-2 ">
                   <p className="px-5 py-2 bg-blue-500 hover:bg-blue-600 mr-5 font-bold rounded mx-auto container text-center ">
                     {project.title}
@@ -199,7 +201,7 @@ function projects() {
               </div>
             );
           })}
-        </Fade>
+        {/* </Fade> */}
       </div>
     </section>
   );
