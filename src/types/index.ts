@@ -7,7 +7,7 @@ export interface Project {
   stack: string[];
   live: string | null;
   github: string | null;
-  image: string;
+  images: { src: string; alt: string }[];
 }
 
 export interface SkillCategory {

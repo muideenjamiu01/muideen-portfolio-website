@@ -11,16 +11,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
 import { SITE_CONFIG, SOCIAL_LINKS, SUBJECT_OPTIONS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-
-const contactSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  subject: z.string().min(1, "Please select a subject"),
-  message: z
-    .string()
-    .min(20, "Message must be at least 20 characters")
-    .max(2000, "Message is too long"),
-});
+import { contactSchema } from "@/lib/contact";
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
@@ -60,6 +51,7 @@ const inputClasses = cn(
 export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -72,6 +64,7 @@ export function Contact() {
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -79,13 +72,15 @@ export function Contact() {
         body: JSON.stringify(data),
       });
 
-      if (!res.ok) throw new Error("Failed to send message");
+      const result = await res.json();
+      if (!res.ok || result.ok !== true) throw new Error("Failed to send message");
 
       setSubmitted(true);
       reset();
       toast.success("Message sent! I'll get back to you within 24 hours.");
     } catch {
-      toast.error("Something went wrong. Please try emailing me directly.");
+      setSubmitError("Your message could not be sent. Please try again or email me directly below.");
+      toast.error("Message not sent. You can email me directly.");
     } finally {
       setIsSubmitting(false);
     }
@@ -216,6 +211,10 @@ export function Contact() {
                   aria-label="Contact form"
                 >
                   <div className="flex flex-col gap-5">
+                    <div className="hidden" aria-hidden="true">
+                      <label htmlFor="contact-website">Leave this field empty</label>
+                      <input id="contact-website" type="text" tabIndex={-1} autoComplete="off" {...register("website")} />
+                    </div>
                     {/* Name + Email */}
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
@@ -353,6 +352,12 @@ export function Contact() {
                       )}
                     </div>
 
+                    {submitError && (
+                      <p role="alert" className="text-sm text-red-400">
+                        {submitError}{" "}
+                        <a href={`mailto:${SITE_CONFIG.email}`} className="underline underline-offset-4">{SITE_CONFIG.email}</a>
+                      </p>
+                    )}
                     {/* Submit */}
                     <Button
                       type="submit"

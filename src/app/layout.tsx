@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "sonner";
+import { SITE_CONFIG } from "@/lib/constants";
 import "./globals.css";
 
 const inter = Inter({
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     title: "Muideen Jamiu | Senior Frontend Engineer",
     description:
       "5+ years building production-grade web applications. React, Next.js, TypeScript, Vue.js.",
-    url: "https://muideenjamiu.dev",
+    url: SITE_CONFIG.url,
     siteName: "Muideen Jamiu Portfolio",
     images: [
       {
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  metadataBase: new URL("https://muideenjamiu.dev"),
+  metadataBase: new URL(SITE_CONFIG.url),
 };
 
 export default function RootLayout({
@@ -75,9 +76,6 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin=""
         />
-        <style>{`
-          :root { --font-display: 'Inter', system-ui, sans-serif; }
-        `}</style>
       </head>
       <body className="antialiased">
         <ThemeProvider

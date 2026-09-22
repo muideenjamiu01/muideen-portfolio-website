@@ -99,7 +99,7 @@ export function Navbar() {
               variant="ghost"
               size="sm"
               href={SITE_CONFIG.cvUrl}
-              external
+              download
             >
               <Download className="w-4 h-4" />
               Download CV
@@ -201,7 +201,7 @@ export function Navbar() {
                   variant="ghost"
                   size="md"
                   href={SITE_CONFIG.cvUrl}
-                  external
+                  download
                   className="w-full justify-center"
                 >
                   <Download className="w-4 h-4" />

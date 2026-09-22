@@ -7,8 +7,8 @@ export const SITE_CONFIG = {
   email: "muideenjamiu01@gmail.com",
   location: "Lagos, Nigeria",
   timezone: "WAT (UTC+1)",
-  url: "https://muideenjamiu.dev",
-  cvUrl: "/Muideen_Jamiu_CV.pdf",
+  url: "https://muideenjamiu-is-a.dev",
+  cvUrl: "/Muideen Muhammed Jamiu_Senior_Frontend_Engineer_CV.pdf",
   availability: "Available for remote opportunities",
   responseTime: "Typically responds within 24 hours",
 };

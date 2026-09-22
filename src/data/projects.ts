@@ -2,6 +2,107 @@ import { Project } from "@/types";
 
 export const projects: Project[] = [
   {
+    id: 9,
+    title: "Institutional Management System",
+    featured: true,
+    category: "Full Stack",
+    description: "A full-stack platform with dedicated admin, student, and applicant portals for admissions, payments, course registration, and institutional operations.",
+    stack: [
+      "Next.js",
+      "Node.js",
+      "PostgreSQL",
+      "Prisma"
+    ],
+    live: "https://institution-management-system.vercel.app/",
+    github: "https://github.com/muideenjamiu01/institution-management-system",
+    images: [
+      {
+        src: "/projects/institution-management-system-vercel-app-2026-08-08-21_55_30.png",
+        alt: "Institutional Management System homepage"
+      },
+      {
+        src: "/projects/institutional-management-system/admin portal/screencapture-institution-management-system-vercel-app-dashboard-2026-01-20-11_12_05 (1).png",
+        alt: "Admin dashboard"
+      },
+      {
+        src: "/projects/institutional-management-system/admin portal/screencapture-institution-management-system-vercel-app-dashboard-course-management-2026-01-20-11_09_58 (1).png",
+        alt: "Admin course management"
+      },
+      {
+        src: "/projects/institutional-management-system/admin portal/screencapture-institution-management-system-vercel-app-dashboard-departments-2026-01-20-11_10_45 (1).png",
+        alt: "Admin departments"
+      },
+      {
+        src: "/projects/institutional-management-system/applicant portal/screencapture-institution-management-system-vercel-app-applicant-login-2026-01-25-17_32_58.png",
+        alt: "Applicant sign in"
+      },
+      {
+        src: "/projects/institutional-management-system/applicant portal/screencapture-institution-management-system-vercel-app-applicant-register-2026-01-25-17_13_02.png",
+        alt: "Applicant registration"
+      }
+    ]
+  },
+  {
+    id: 10,
+    title: "Quiz Fun",
+    featured: true,
+    category: "Web Platforms",
+    description: "Quiz experiences for competitions and corporate learning, with dedicated screens for each audience.",
+    stack: [],
+    live: null,
+    github: null,
+    images: [
+      {
+        src: "/projects/Quiz-fun/competition.png",
+        alt: "Quiz Fun competitions"
+      },
+      {
+        src: "/projects/Quiz-fun/corporate.png",
+        alt: "Quiz Fun corporate learning"
+      }
+    ]
+  },
+  {
+    id: 11,
+    title: "TestAssessify",
+    featured: true,
+    category: "Web Platforms",
+    description: "A digital assessment platform for skills testing and recruitment.",
+    stack: [],
+    live: null,
+    github: null,
+    images: [
+      {
+        src: "/projects/testassesify/screencapture-testassessify-2026-08-08-22_05_29.png",
+        alt: "TestAssessify website"
+      }
+    ]
+  },
+  {
+    id: 12,
+    title: "Service School House",
+    featured: false,
+    category: "Web Platforms",
+    description: "Learning and workshop experiences, including the Value Workshop portal.",
+    stack: [],
+    live: null,
+    github: null,
+    images: [
+      {
+        src: "/projects/service-school-house/image.png",
+        alt: "Service School House overview"
+      },
+      {
+        src: "/projects/service-school-house/value-workshop/image.png",
+        alt: "Value Workshop overview"
+      },
+      {
+        src: "/projects/service-school-house/value-workshop/value-worksho-login.png",
+        alt: "Value Workshop sign in"
+      }
+    ]
+  },
+  {
     id: 1,
     title: "YouVerify Website",
     featured: true,
@@ -11,7 +112,8 @@ export const projects: Project[] = [
     stack: ["React", "Tailwind CSS", "JavaScript"],
     live: "https://www.youverify.co/",
     github: null,
-    image: "/projects/youverify.png",
+    images: [{ src: "/images/yv.png", alt: "YouVerify homepage" },
+      { src: "/projects/screencapture-youverify-co-en-2026-08-08-21_57_05.png", alt: "YouVerify website overview" }],
   },
   {
     id: 2,
@@ -23,7 +125,7 @@ export const projects: Project[] = [
     stack: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
     live: "https://www.woozeee.com/",
     github: null,
-    image: "/projects/woozeee.png",
+    images: [{ src: "/images/woozeee.png", alt: "Woozeee homepage" }],
   },
   {
     id: 3,
@@ -35,7 +137,7 @@ export const projects: Project[] = [
     stack: ["React", "Node.js", "MongoDB", "Redux", "Tailwind CSS"],
     live: "https://youstore-staging.netlify.app/",
     github: "https://github.com/muideenjamiu01/multi-merchant_e-commerce",
-    image: "/projects/youstore.png",
+    images: [{ src: "/images/youstore.png", alt: "Youstore storefront" }],
   },
   {
     id: 4,
@@ -47,7 +149,7 @@ export const projects: Project[] = [
     stack: ["React", "Firebase", "CSS"],
     live: "https://slack-clone-7fa06.web.app/",
     github: "https://github.com/muideenjamiu01/slack-clone",
-    image: "/projects/slack.png",
+    images: [{ src: "/images/slack-clone.png", alt: "Slack Clone workspace" }],
   },
   {
     id: 5,
@@ -59,7 +161,7 @@ export const projects: Project[] = [
     stack: ["React", "TMDB API", "CSS"],
     live: "https://netflixclone-with-reactjs.netlify.app/",
     github: "https://github.com/muideenjamiu01/netflix-react",
-    image: "/projects/netflix.png",
+    images: [{ src: "/images/netflix-react.png", alt: "Netflix Clone browsing" }],
   },
   {
     id: 6,
@@ -71,7 +173,7 @@ export const projects: Project[] = [
     stack: ["React", "CSS"],
     live: "https://veerge-for-maintenance.netlify.app/",
     github: "https://github.com/muideenjamiu01/Matador-trust-front-end-Assesment",
-    image: "/projects/veerge.png",
+    images: [{ src: "/images/veerge.png", alt: "Veerge dashboard" }],
   },
   {
     id: 7,
@@ -83,7 +185,7 @@ export const projects: Project[] = [
     stack: ["HTML", "SCSS", "Vanilla JS"],
     live: "https://laslessvpndesign.netlify.app/",
     github: "https://github.com/muideenjamiu01/lasless-figma-design",
-    image: "/projects/laslesvpn.png",
+    images: [{ src: "/images/lassless.png", alt: "LaslesVPN landing page" }],
   },
   {
     id: 8,
@@ -95,7 +197,7 @@ export const projects: Project[] = [
     stack: ["HTML", "CSS", "JavaScript"],
     live: "https://omifoodclone.netlify.app/",
     github: "https://github.com/muideenjamiu01/OmniFood-sample-web",
-    image: "/projects/omnifood.png",
+    images: [{ src: "/images/omnifood.png", alt: "OmniFood landing page" }],
   },
 ];
 

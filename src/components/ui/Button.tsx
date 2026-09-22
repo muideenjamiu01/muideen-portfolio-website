@@ -10,6 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
   href?: string;
   external?: boolean;
+  download?: boolean | string;
 }
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -36,6 +37,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       href,
       external,
+      download,
       ...props
     },
     ref
@@ -54,6 +56,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       return (
         <a
           href={href}
+          download={download}
           className={classes}
           {...(external
             ? { target: "_blank", rel: "noopener noreferrer" }

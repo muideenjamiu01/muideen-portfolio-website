@@ -203,7 +203,7 @@ export function Hero() {
                 variant="ghost"
                 size="md"
                 href={SITE_CONFIG.cvUrl}
-                external
+                download
               >
                 <Download className="w-4 h-4" />
                 Download CV

@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-
-const contactSchema = z.object({
-  name: z.string().min(2).max(100),
-  email: z.string().email(),
-  subject: z.string().min(1).max(100),
-  message: z.string().min(20).max(2000),
-});
+import { contactSchema, escapeHtml } from "@/lib/contact";
+import { SITE_CONFIG } from "@/lib/constants";
 
 const SUBJECT_LABELS: Record<string, string> = {
   job: "Job Opportunity",
@@ -20,25 +15,34 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = contactSchema.parse(body);
 
-    const apiKey = process.env.RESEND_API_KEY;
-    const toEmail = process.env.CONTACT_EMAIL ?? "muideenjamiu01@gmail.com";
+    if (data.website) {
+      return NextResponse.json({ error: "Unable to send message" }, { status: 422 });
+    }
 
-    if (!apiKey) {
-      // Fail gracefully in preview environments without a key
-      console.warn("[contact] RESEND_API_KEY not set — email not sent");
-      return NextResponse.json({ ok: true, preview: true });
+    const apiKey = process.env.RESEND_API_KEY;
+    const toEmail = process.env.CONTACT_EMAIL || SITE_CONFIG.email;
+    const fromEmail = process.env.CONTACT_FROM_EMAIL;
+
+    if (!apiKey || !fromEmail) {
+      console.warn("[contact] Email delivery is not configured");
+      return NextResponse.json(
+        { error: "The contact form is temporarily unavailable. Please email me directly." },
+        { status: 503 }
+      );
     }
 
     const { Resend } = await import("resend");
     const resend = new Resend(apiKey);
 
     const subjectLabel = SUBJECT_LABELS[data.subject] ?? data.subject;
+    const safe = { name: escapeHtml(data.name), email: escapeHtml(data.email), message: escapeHtml(data.message) };
 
-    const { error } = await resend.emails.send({
-      from: "Portfolio Contact <onboarding@resend.dev>",
+    const { data: sent, error } = await resend.emails.send({
+      from: fromEmail,
       to: [toEmail],
       reply_to: data.email,
       subject: `[Portfolio] ${subjectLabel} from ${data.name}`,
+      text: `From: ${data.name} <${data.email}>\nSubject: ${subjectLabel}\n\n${data.message}`,
       html: `
 <!DOCTYPE html>
 <html lang="en">
@@ -53,11 +57,11 @@ export async function POST(request: NextRequest) {
       <table style="width:100%;border-collapse:collapse">
         <tr>
           <td style="padding:8px 0;color:#94a3b8;font-size:13px;width:80px">From</td>
-          <td style="padding:8px 0;color:#f8fafc;font-size:14px;font-weight:600">${data.name}</td>
+          <td style="padding:8px 0;color:#f8fafc;font-size:14px;font-weight:600">${safe.name}</td>
         </tr>
         <tr>
           <td style="padding:8px 0;color:#94a3b8;font-size:13px">Email</td>
-          <td style="padding:8px 0"><a href="mailto:${data.email}" style="color:#818cf8;text-decoration:none">${data.email}</a></td>
+          <td style="padding:8px 0"><a href="mailto:${safe.email}" style="color:#818cf8;text-decoration:none">${safe.email}</a></td>
         </tr>
         <tr>
           <td style="padding:8px 0;color:#94a3b8;font-size:13px">Subject</td>
@@ -66,28 +70,37 @@ export async function POST(request: NextRequest) {
       </table>
       <div style="margin-top:24px;padding:16px;background:#1a1a26;border-radius:12px;border:1px solid #1e2030">
         <p style="margin:0 0 8px;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.05em">Message</p>
-        <p style="margin:0;color:#f8fafc;font-size:14px;line-height:1.7;white-space:pre-wrap">${data.message}</p>
+        <p style="margin:0;color:#f8fafc;font-size:14px;line-height:1.7;white-space:pre-wrap">${safe.message}</p>
       </div>
       <div style="margin-top:24px;padding-top:16px;border-top:1px solid #1e2030">
-        <a href="mailto:${data.email}" style="display:inline-flex;align-items:center;gap:8px;background:#6366f1;color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:600">
-          Reply to ${data.name}
+        <a href="mailto:${safe.email}" style="display:inline-flex;align-items:center;gap:8px;background:#6366f1;color:#fff;padding:10px 20px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:600">
+          Reply to ${safe.name}
         </a>
       </div>
     </div>
   </div>
-  <p style="text-align:center;color:#475569;font-size:12px;margin-top:24px">Sent from muideenjamiu.dev contact form</p>
+  <p style="text-align:center;color:#475569;font-size:12px;margin-top:24px">Sent from ${SITE_CONFIG.url} contact form</p>
 </body>
 </html>
       `.trim(),
     });
 
-    if (error) {
-      console.error("[contact] Resend error:", error);
+    if (error || !sent?.id) {
+      console.error("[contact] Resend delivery failed", {
+        name: error?.name ?? "missing_delivery_receipt",
+        message: error?.message
+          .split(apiKey).join("[redacted]")
+          .replace(/re_[A-Za-z0-9_-]+/g, "[redacted]")
+          ?? "Resend did not return an email ID",
+      });
       return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
     }
 
     return NextResponse.json({ ok: true });
   } catch (err) {
+    if (err instanceof SyntaxError) {
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    }
     if (err instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid form data", issues: err.issues },

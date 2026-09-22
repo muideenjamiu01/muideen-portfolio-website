@@ -1,10 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ExternalLink, Github, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Github } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Project } from "@/types";
-import { StackBadge } from "./Badge";
+import { ProjectGallery } from "./ProjectGallery";
 
 interface ProjectCardProps {
   project: Project;
@@ -12,120 +11,27 @@ interface ProjectCardProps {
   featured?: boolean;
 }
 
-export function ProjectCard({
-  project,
-  index = 0,
-  featured = false,
-}: ProjectCardProps) {
+export function ProjectCard({ project, index = 0, featured = false }: ProjectCardProps) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-30px" }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={cn(
-        "card group flex flex-col overflow-hidden",
-        featured && "md:flex-row md:min-h-[280px]"
-      )}
-      aria-label={`Project: ${project.title}`}
-    >
-      {/* Image */}
-      <div
-        className={cn(
-          "relative overflow-hidden bg-[var(--bg-tertiary)]",
-          "flex-shrink-0",
-          featured
-            ? "md:w-2/5 h-52 md:h-auto"
-            : "h-44"
-        )}
-      >
-        {/* Placeholder gradient when no real image */}
-        <div
-          className={cn(
-            "absolute inset-0 bg-gradient-to-br from-indigo-600/20 via-purple-600/10 to-transparent",
-            "flex items-center justify-center"
-          )}
-        >
-          <span className="text-4xl font-bold text-indigo-400/30 font-mono select-none">
-            {project.title.slice(0, 2).toUpperCase()}
-          </span>
+    <article aria-label={`Project: ${project.title}`} className={cn("project-card group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--bg-primary)]", featured && "md:col-span-2 lg:grid lg:grid-cols-[1.15fr_1fr]")}>
+      <ProjectGallery project={project} featured={featured} />
+      <div className={cn("flex flex-1 flex-col p-6 sm:p-7", featured && "lg:justify-center lg:p-10")}>
+        <div className="mb-4 flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+          <span className="font-mono">{String(index + 1).padStart(2, "0")}</span>
+          <span className="h-px w-6 bg-[var(--border-hover)]" />
+          <span>{project.category}</span>
+          {featured && <span className="ml-auto rounded-full border border-indigo-500/25 bg-indigo-500/10 px-2.5 py-1 text-[var(--accent-primary)] dark:text-indigo-300">Featured</span>}
         </div>
-
-        {/* Overlay on hover */}
-        <div
-          className={cn(
-            "absolute inset-0 bg-indigo-600/80 flex items-center justify-center",
-            "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          )}
-        >
-          <span className="text-white font-semibold flex items-center gap-2 text-sm">
-            View Project <ArrowUpRight className="w-4 h-4" />
-          </span>
-        </div>
-
-        {/* Category pill */}
-        <div className="absolute top-3 left-3">
-          <span className="text-xs px-2 py-1 rounded-full bg-[var(--bg-primary)]/80 backdrop-blur-sm text-[var(--text-secondary)] border border-[var(--border)] font-mono">
-            {project.category}
-          </span>
-        </div>
+        <h3 className={cn("text-xl font-semibold leading-tight tracking-tight sm:text-2xl", featured && "lg:text-3xl")}>{project.title}</h3>
+        <p className="mt-4 text-sm leading-7 text-[var(--text-secondary)]">{project.description}</p>
+        {project.stack.length > 0 && <ul aria-label="Technologies" className="mt-5 flex flex-wrap gap-2">
+          {project.stack.map((tech) => <li key={tech} className="rounded-md border border-[var(--border)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-secondary)]">{tech}</li>)}
+        </ul>}
+        {(project.live || project.github) && <div className="mt-auto flex flex-wrap items-center gap-x-6 gap-y-2 pt-7">
+          {project.live && <a href={project.live} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.title} website (new tab)`} className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-indigo-400">Visit website <ArrowUpRight className="h-4 w-4" /></a>}
+          {project.github && <a href={project.github} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} source code (new tab)`} className="inline-flex min-h-11 items-center gap-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]"><Github className="h-4 w-4" />Source code</a>}
+        </div>}
       </div>
-
-      {/* Content */}
-      <div className="flex flex-col gap-3 p-6 flex-1">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="font-semibold text-[var(--text-primary)] text-lg leading-snug group-hover:text-indigo-400 transition-colors duration-200">
-            {project.title}
-          </h3>
-          {/* Action links */}
-          <div className="flex items-center gap-1.5 flex-shrink-0">
-            {project.github && (
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${project.title} GitHub repository`}
-                className={cn(
-                  "w-8 h-8 flex items-center justify-center rounded-lg",
-                  "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]",
-                  "border border-[var(--border)] hover:border-[var(--border-hover)]",
-                  "hover:bg-[var(--bg-tertiary)] transition-all duration-200"
-                )}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Github className="w-4 h-4" />
-              </a>
-            )}
-            {project.live && (
-              <a
-                href={project.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${project.title} live demo`}
-                className={cn(
-                  "w-8 h-8 flex items-center justify-center rounded-lg",
-                  "text-[var(--text-tertiary)] hover:text-indigo-400",
-                  "border border-[var(--border)] hover:border-indigo-500/40",
-                  "hover:bg-indigo-500/10 transition-all duration-200"
-                )}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            )}
-          </div>
-        </div>
-
-        <p className="text-[var(--text-secondary)] text-sm leading-relaxed flex-1">
-          {project.description}
-        </p>
-
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {project.stack.map((tech) => (
-            <StackBadge key={tech} tech={tech} />
-          ))}
-        </div>
-      </div>
-    </motion.article>
+    </article>
   );
 }

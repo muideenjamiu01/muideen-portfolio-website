@@ -8,7 +8,7 @@ Built with Next.js, TypeScript, and Tailwind CSS, the site prioritizes accessibi
 
 This project is a personal portfolio built on the Next.js App Router. It presents professional experience and project case studies through reusable, data-driven components, while providing a validated contact workflow backed by Resend.
 
-Live site: [muideenjamiu.dev](https://muideenjamiu.dev)
+Live site: [muideenjamiu-is-a.dev](https://muideenjamiu-is-a.dev)
 
 ## Key features
 
@@ -70,17 +70,19 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `RESEND_API_KEY` | Production only | Resend API key used by the contact endpoint to send messages. |
+| `RESEND_API_KEY` | For sending mail | Resend API key used by the contact endpoint to send messages. |
+| `CONTACT_FROM_EMAIL` | For sending mail | Sender address on your verified Resend domain. |
 | `CONTACT_EMAIL` | No | Destination address for contact submissions. Defaults to the portfolio owner's email address. |
 
 Example `.env.local`:
 
 ```dotenv
 RESEND_API_KEY=re_your_api_key
-CONTACT_EMAIL=hello@example.com
+CONTACT_EMAIL=muideenjamiu01@gmail.com
+CONTACT_FROM_EMAIL="Portfolio Contact <contact@muideenjamiu-is-a.dev>"
 ```
 
-When `RESEND_API_KEY` is not set, the contact endpoint runs in preview mode: it validates the request and returns a successful response without sending an email. This keeps local and preview deployments functional without exposing credentials.
+When the API key or sender address is missing, the endpoint returns HTTP 503 and the form offers a direct email link. A successful response requires Resend to accept the message; final inbox delivery can be checked in Resend.
 
 > Never commit `.env.local` or any API key to source control. Configure production secrets in the hosting provider's environment settings.
  
@@ -88,6 +90,7 @@ When `RESEND_API_KEY` is not set, the contact endpoint runs in preview mode: it 
 
 | Command | Purpose |
 | --- | --- |
+| `npm test` | Runs contact endpoint and public asset regression tests without sending email. |
 | `npm run dev` | Starts the local development server. |
 | `npm run build` | Creates an optimized production build. |
 | `npm run start` | Runs the production server after a successful build. |
@@ -100,7 +103,7 @@ npm run lint
 npm run build
 ```
 
-> **Current build status:** the production build is blocked by the legacy `src/app/draft.tsx` file, which references `react-reveal/Fade` and image modules that are not part of the active portfolio implementation. Remove the unused draft from TypeScript compilation or migrate its imports before treating the build as release-ready.
+The active project listing lives in `src/data/projects.ts`; `src/app/draft.tsx` is an archived reference.
 
 ## Project structure
 
@@ -152,7 +155,26 @@ Store related media under `public/` and reference each asset using an absolute p
 
 ### Contact email delivery
 
-The API route uses `onboarding@resend.dev` as its sender, which is suitable for initial Resend testing. For production delivery, verify a sending domain in Resend and update the `from` address in `src/app/api/contact/route.ts`.
+1. In [Resend Domains](https://resend.com/domains), add `muideenjamiu-is-a.dev` and enable sending. Copy the exact DNS records Resend provides.
+2. In Porkbun, open **Domain Management → DNS** for this domain and add those records. If you changed your nameservers to Vercel, add the records in Vercel DNS instead. Preserve the records that connect your website to Vercel. You only need sending enabled in Resend for this form.
+3. Wait for Resend to show the domain as verified, then create a sending API key.
+4. In **Vercel → Project → Settings → Environment Variables**, add these for Production (and Preview if wanted):
+   - `RESEND_API_KEY`: your private Resend key.
+   - `CONTACT_EMAIL`: `muideenjamiu01@gmail.com`.
+   - `CONTACT_FROM_EMAIL`: `Portfolio Contact <contact@muideenjamiu-is-a.dev>`.
+5. Redeploy this code after saving the variables. Submit the form, check Resend's delivery status, and check your Gmail inbox/spam folder. Replying to the notification addresses the visitor automatically.
+
+See [Resend domain verification](https://resend.com/docs/dashboard/domains/introduction) and [Vercel environment variables](https://vercel.com/docs/environment-variables).
+
+The direct Gmail link already opens the visitor's email app. If you also want people to email `hello@muideenjamiu-is-a.dev`, click the envelope icon in Porkbun, choose **Email Forwarding**, and forward `hello` to `muideenjamiu01@gmail.com`. This is separate from the website form. Follow [Porkbun's forwarding guide](https://kb.porkbun.com/article/10-how-to-set-up-email-forwarding-service), including its instructions for externally hosted DNS when applicable. Forwarding receives mail; replies from Gmail use your Gmail address.
+
+### Resume and project screenshots
+
+`public/Muideen_Jamiu_CV.pdf` is a snapshot exported from the supplied Google Doc. The existing Download CV buttons now serve this file. Replace the PDF after future resume edits.
+
+Each project in `src/data/projects.ts` has an `images` array of `{ src, alt }` entries. Add screenshots to `public/` and list them there. Galleries support previous/next buttons, left/right keys, and swipes. Clicking a screenshot opens an accessible on-page dialog with thumbnails, image navigation, Escape/backdrop dismissal, and a full-width mode for reading tall screenshots. Closing restores focus and the page scroll position. Single-image projects also support preview. Card images and thumbnails use Next.js optimization; full-resolution originals load only when the viewer opens.
+
+Run `npm run build` then `npm run test:e2e` for gallery browser tests (install Chromium once with `npx playwright install chromium`). These cover focus, scrolling, keyboard and swipe navigation, filtering, light/dark themes, and image failures.
 
 ## Engineering considerations
 
@@ -174,7 +196,7 @@ Contact submissions are validated on the server before delivery. Secrets remain 
 
 1. Import the repository into Vercel.
 2. Keep the detected framework preset as **Next.js**.
-3. Add `RESEND_API_KEY` and `CONTACT_EMAIL` under project environment variables.
+3. Add `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, and `CONTACT_EMAIL` under project environment variables.
 4. Deploy and verify the contact form from the production domain.
 
 The application can also run on any platform that supports a Node.js-hosted Next.js application:
@@ -199,7 +221,7 @@ This repository represents a personal portfolio, but focused improvements are we
 
 **Muideen Muhammed Jamiu** — Senior Frontend Engineer
 
-- Website: [muideenjamiu.dev](https://muideenjamiu.dev)
+- Website: [muideenjamiu-is-a.dev](https://muideenjamiu-is-a.dev)
 - LinkedIn: [muideen-muhammed-jamiu](https://linkedin.com/in/muideen-muhammed-jamiu)
 - GitHub: [muideenjamiu01](https://github.com/muideenjamiu01)
 - Email: [muideenjamiu01@gmail.com](mailto:muideenjamiu01@gmail.com)
